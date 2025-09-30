@@ -127,7 +127,6 @@ async def getGames(year: Union[str, None]):
     except aiohttp.ClientError as ex:
         logging.error(f"Failed to retrieve game info: {ex}")
 
-
     return allgames
 
 
@@ -143,6 +142,8 @@ async def getAssignmentDetails(url: str):
                         answer = json.loads(await response.text())
                         # since we might be iterating over games in pages for the same assignor id
                         # this has to concatenate instead of merge
+                        # if answer['_embedded']['official']['last_name'] == "Cooley" \
+                        #    and answer['_embedded']['official']['first_name'] == "Martin":
                         allgames.append(answer)
 
                         if 'next' in answer['_links']:
@@ -158,24 +159,35 @@ async def getAssignmentDetails(url: str):
         return allgames
 
 
-async def getGamesReffed(gamedetails: dict):
+# async def getGamesReffed(gamedetails: dict) -> Union[dict, None]:
 
-    async def processAssignments():
+#     async def processAssignments(a: dict):
 
-        url = a['_links']['self']['href']
-        return await getAssignmentDetails(url)
+#         url = a['_links']['self']['href']
+#         x = await getAssignmentDetails(url)
+#         if len(x) > 0:
+#             return x[0]
+#         else:
+#             return None
+#     # assignmentKeys = ['position', 'accepted', "fees", "updated", "links"]
 
-    # assignmentKeys = ['position', 'accepted', "fees", "updated", "links"]
+#     retVal = []
+#     for k, v in gamedetails.items():
+#         for data in v:
+#             if type(data) == dict:
+#                 for a in data['assignments']:
+#                     game = await processAssignments(a)
 
-    assignmentDetails = []
-    for k, v in gamedetails.items():
-        for data in v:
-            if type(data) == dict:
-                for a in data['assignments']:
-                    assignmentDetails.append(await processAssignments(a))
-            elif type(data) == list:
-            #assignments = data['assignments']
-                for assignment in data:
-                    for a in assignment['assignments']:
-                        assignmentDetails.append(await processAssignments(a))
-    return assignmentDetails
+#                     # TO DO - add in site data to the return value
+
+#                     if game is not None:
+#                         game['site'] = data['site']
+#                         retVal.append(game)
+#             elif type(data) == list:
+#                 for assignment in data:
+#                     for a in assignment['assignments']:
+#                         game = await processAssignments(a)
+#                         if game is not None:
+#                             game['_embedded']['site'] = data['site']
+#                             retVal.append(game)
+#     return retVal

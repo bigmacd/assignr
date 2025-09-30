@@ -3,7 +3,7 @@ import sqlite3
 class LocationDb():
 
     def __init__(self):
-        self.dbfilename = 'mileage/locations.db'
+        self.dbfilename = 'locations.db'
         self.connection = sqlite3.connect(self.dbfilename)
         self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
@@ -22,8 +22,10 @@ class LocationDb():
         self.cursor.execute(sql)
 
     def findLocation(self, location: str) -> list:
-        sql = 'SELECT * from locations where facility like ?'
-        r = self.cursor.execute(sql, [location[:8] + '%',])
+        loc = location[:8] + '%'
+        sql = f"SELECT * from locations where facility like '{loc}'"
+        #r = self.cursor.execute(sql, [location[:8] + '%',])
+        r = self.cursor.execute(sql)
         return r.fetchall()
 
 

@@ -86,7 +86,6 @@ class MySoccerLeague(RefereeWebSite):
             startDate = f'1/1/{year}'
             endDate = f'12/31/{year}'
             url = f'https://www.mysoccerleague.com/GamesReffedReport.jsp?YSLkey={key}&dateMode=selectDates&endDate={endDate}&startDate={startDate}'
-
             assignments_page = self._browser.open(url)
             rowtype1 = assignments_page.soup.find_all("tr", { "class" : 'trstyle1'})
             rowtype2 = assignments_page.soup.find_all("tr", { "class" : 'trstyle2'})
